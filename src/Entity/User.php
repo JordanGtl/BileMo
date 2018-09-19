@@ -49,6 +49,25 @@ class User implements UserInterface, \Serializable
         return $this->username;
     }
 
+    public function setUsername(?string $username) : self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email) : self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
     public function getSalt()
     {
         // you *may* need a real salt depending on your encoder
@@ -59,6 +78,13 @@ class User implements UserInterface, \Serializable
     public function getPassword()
     {
         return $this->password;
+    }
+
+    public function setPassword(?string $password)
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
     public function getRoles()
