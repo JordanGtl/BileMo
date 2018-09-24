@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource()
@@ -20,11 +21,16 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=200)
+     * @Assert\NotBlank
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotNull
+     * @Assert\Range(
+     *     min = 0
+     * )
      */
     private $price;
 
