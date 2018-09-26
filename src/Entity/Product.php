@@ -34,6 +34,16 @@ class Product
      */
     private $price;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $das;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $screenSize;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +69,30 @@ class Product
     public function setPrice(int $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getDas(): ?float
+    {
+        return $this->das;
+    }
+
+    public function setDas(float $das): self
+    {
+        $this->das = $das;
+
+        return $this;
+    }
+
+    public function getScreenSize(): ?float
+    {
+        return $this->screenSize;
+    }
+
+    public function setScreenSize(float $screenSize): self
+    {
+        $this->screenSize = $screenSize;
 
         return $this;
     }
