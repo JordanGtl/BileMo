@@ -4,11 +4,14 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Table(name="app_users")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields={"username"}, message="Le nom d'utilisateur existe déjà")
+ * @UniqueEntity(fields={"email"}, message="L'email utilisé existe déjà")
  */
 class User implements UserInterface, \Serializable
 {
@@ -20,7 +23,7 @@ class User implements UserInterface, \Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=25, unique=true)
+     * @ORM\Column(name="username", type="string", length=25, unique=true)
      */
     private $username;
 
@@ -30,7 +33,7 @@ class User implements UserInterface, \Serializable
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=254, unique=true)
+     * @ORM\Column(name="email", type="string", length=254, unique=true)
      */
     private $email;
 
