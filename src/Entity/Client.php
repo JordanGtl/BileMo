@@ -5,10 +5,15 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource()
+ * @ApiResource(collectionOperations={
+ *     "getlist"={"method"="GET", "path"="clients", "groups"={"list"}, "normalization_context"={"groups"={"list"}}},
+ *     "getdetail"={"method"="GET", "path"="clients/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
+ *      }
+ *     )
  * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
  */
 class Client
@@ -22,6 +27,7 @@ class Client
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"list", "get"})
      * @Assert\NotBlank(message="Le prénom du client ne peut être vide")
      */
     // The firstname of customer cannot be empty
@@ -29,6 +35,7 @@ class Client
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"list", "get"})
      * @Assert\NotBlank(message="Le nom du client ne peut être vide")
      */
     // The name of customer cannot be empty

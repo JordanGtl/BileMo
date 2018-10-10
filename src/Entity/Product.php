@@ -5,10 +5,17 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *     "getlist"={"method"="GET", "path"="products", "groups"={"list"}, "normalization_context"={"groups"={"list"}}},
+ *     "getdetail"={"method"="GET", "path"="products/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
+ *      }
+ *     )
+ *
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  * @UniqueEntity(fields={"name"}, message="Le produit que vous souhaitez ajouter existe déjà")
  */
@@ -16,6 +23,7 @@ class Product
 {
     /**
      * @ORM\Id()
+     * @Assert\Uuid
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
@@ -23,6 +31,7 @@ class Product
 
     /**
      * @ORM\Column(name="name", type="string", length=200)
+     * @Groups({"list", "get"})
      * @Assert\NotBlank(message="Vous devez renseigner un nom pour ajouter/editer un produit")
      */
     // you must fill the name for add/edit the product
@@ -30,6 +39,7 @@ class Product
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"list", "get"})
      * @Assert\NotNull(message="Vous devez renseigner un prix pour ajouter/editer un produit")
      * @Assert\Range(
      *     min = 0,
@@ -41,7 +51,8 @@ class Product
 
     /**
      * @ORM\Column(type="float")
-     * @Assert\NotNull
+     * @Groups({"get"})
+     * @Assert\NotNull()
      * @Assert\Range(
      *     min = 0,
      *     minMessage="le DAS ne peut pas être négatif"
@@ -52,7 +63,8 @@ class Product
 
     /**
      * @ORM\Column(type="float")
-     * @Assert\NotNull
+     * @Groups({"get"})
+     * @Assert\NotNull(groups={"b"})
      * @Assert\Range(
      *     min = 0,
      *     minMessage="La taille de l'écran ne peut pas être négatif"
