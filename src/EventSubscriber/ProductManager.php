@@ -19,11 +19,13 @@ final class ProductManager implements EventSubscriberInterface
 
     public function checkProductAvailability(GetResponseForControllerResultEvent $event): void
     {
-        $product = $event->getControllerResult();
+        /*$product = $event->getControllerResult();
+
+        throw new ProductNotFoundException(sprintf('The product "%s" does not exist.', $product->getId()));
 
         if (!$product instanceof Product || !$event->getRequest()->isMethodSafe(false)) {
             return;
-        }
+        }*/
 
         /*if (!$product->isPubliclyAvailable()) {
             // Using internal codes for a better understanding of what's going on

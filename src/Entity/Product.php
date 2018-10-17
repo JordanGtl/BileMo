@@ -10,10 +10,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *     collectionOperations={
- *     "getlist"={"method"="GET", "path"="products", "groups"={"list"}, "normalization_context"={"groups"={"list"}}},
- *     "getdetail"={"method"="GET", "path"="products/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
- *      }
+ *     itemOperations=
+ *     {
+ *          "getdetail"={"method"="GET", "path"="products/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
+ *          "put"={"method"="PUT", "path"="products/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
+ *          "delete"={"method"="DELETE", "path"="products/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
+ *     },
+ *     collectionOperations=
+ *     {
+ *          "getlist"={"method"="GET", "path"="products", "groups"={"list"}, "normalization_context"={"groups"={"list"}}},
+ *          "create"={"method"="POST", "path"="products", "groups"={"list"}, "normalization_context"={"groups"={"list", "get"}}},
+ *     }
  *     )
  *
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")

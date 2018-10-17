@@ -61,7 +61,7 @@ class CreateUserCommand extends Command
 
         $password = $this->passwordEncoder->encodePassword($user, $password);
         $user->setPassword($password);
-        $user->setEmail('test@test.fr');
+        $user->setEmail($username.'@test.fr');
 
         $this->em->persist($user);
         $this->em->flush();

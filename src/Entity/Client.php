@@ -2,17 +2,27 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(collectionOperations={
- *     "getlist"={"method"="GET", "path"="clients", "groups"={"list"}, "normalization_context"={"groups"={"list"}}},
- *     "getdetail"={"method"="GET", "path"="clients/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
- *      }
+ * @ApiResource(
+ *     itemOperations=
+ *     {
+ *          "getdetail"={"method"="GET", "path"="clients/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
+ *          "put"={"method"="PUT", "path"="clients/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
+ *          "delete"={"method"="DELETE", "path"="clients/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
+ *     },
+ *     collectionOperations=
+ *     {
+ *          "getlist"={"method"="GET", "path"="clients", "groups"={"list"}, "normalization_context"={"groups"={"list"}}},
+ *          "create"={"method"="POST", "path"="clients", "groups"={"list"}, "normalization_context"={"groups"={"list", "post"}}},
+ *     }
  *     )
  * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
  */
@@ -27,7 +37,7 @@ class Client
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"list", "get"})
+     * @Groups({"list", "get", "post"})
      * @Assert\NotBlank(message="Le prénom du client ne peut être vide")
      */
     // The firstname of customer cannot be empty
@@ -35,7 +45,7 @@ class Client
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"list", "get"})
+     * @Groups({"list", "get", "post"})
      * @Assert\NotBlank(message="Le nom du client ne peut être vide")
      */
     // The name of customer cannot be empty
