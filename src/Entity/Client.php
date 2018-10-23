@@ -2,11 +2,8 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -38,17 +35,15 @@ class Client
     /**
      * @ORM\Column(type="string", length=100)
      * @Groups({"list", "get", "post"})
-     * @Assert\NotBlank(message="Le prénom du client ne peut être vide")
+     * @Assert\NotBlank(message="The firstname of customer cannot be empty")
      */
-    // The firstname of customer cannot be empty
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=100)
      * @Groups({"list", "get", "post"})
-     * @Assert\NotBlank(message="Le nom du client ne peut être vide")
+     * @Assert\NotBlank(message="The name of customer cannot be empty")
      */
-    // The name of customer cannot be empty
     private $lastname;
 
     /**
