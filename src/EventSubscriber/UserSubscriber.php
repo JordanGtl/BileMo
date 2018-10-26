@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-final class ClientSubscriber implements EventSubscriberInterface
+final class UserSubscriber implements EventSubscriberInterface
 {
     /**
      * @var TokenStorageInterface
@@ -26,17 +26,17 @@ final class ClientSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => [['setCurrentUser', EventPriorities::PRE_WRITE]],
+            KernelEvents::VIEW => [['setCurrentClient', EventPriorities::PRE_WRITE]],
         ];
     }
 
-    public function setCurrentUser(GetResponseForControllerResultEvent $event)
+    public function setCurrentClient(GetResponseForControllerResultEvent $event)
     {
         $object = $event->getControllerResult();
 
-        if (method_exists($object, 'setUser'))
+        if (method_exists($object, 'setClient'))
         {
-            $object->setUser($this->tokenStorage->getToken()->getUser());
+            $object->setClient($this->tokenStorage->getToken()->getUser());
             $event->setControllerResult($object);
         }
     }

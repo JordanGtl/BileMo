@@ -46,10 +46,10 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
      */
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass)
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-        if ($user instanceof User && Client::class === $resourceClass && !$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
+       $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof Client && User::class === $resourceClass && !$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
             $rootAlias = $queryBuilder->getRootAliases()[0];
-            $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
+            $queryBuilder->andWhere(sprintf('%s.client = :current_user', $rootAlias));
             $queryBuilder->setParameter('current_user', $user->getId());
         }
     }

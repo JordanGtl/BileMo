@@ -2,6 +2,7 @@
 // src/Command/CreateUserCommand.php
 namespace App\Command;
 
+use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -55,15 +56,16 @@ class CreateUserCommand extends Command
         $username = $input->getArgument('username');
         $password = $input->getArgument('password');
 
-        /** @var User $user */
-        $user = new User();
-        $user->setUsername($username);
+        /** @var Client $client */
+        $client = new Client();
+        $client->setUsername($username);
 
-        $password = $this->passwordEncoder->encodePassword($user, $password);
-        $user->setPassword($password);
-        $user->setEmail($username.'@test.fr');
+        $password = $this->passwordEncoder->encodePassword($client, $password);
+        $client->setPassword($password);
+        $client->setEmail($username.'@test.fr');
+        $client->setIsActive(true);
 
-        $this->em->persist($user);
+        $this->em->persist($client);
         $this->em->flush();
 
         $output->write('create a user succes.');

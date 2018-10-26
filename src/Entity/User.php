@@ -1,168 +1,155 @@
 <?php
+
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="app_users")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity(fields={"username"}, message="Le nom d'utilisateur existe déjà")
- * @UniqueEntity(fields={"email"}, message="L'email utilisé existe déjà")
+ * @ApiResource(
+ *     itemOperations=
+ *     {
+ *          "getdetail"={"method"="GET", "path"="users/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
+ *          "put"={"method"="PUT", "path"="users/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
+ *          "delete"={"method"="DELETE", "path"="users/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
+ *     },
+ *     collectionOperations=
+ *     {
+ *          "getlist"={"method"="GET", "path"="users", "groups"={"list"}, "normalization_context"={"groups"={"list"}}},
+ *          "create"={"method"="POST", "path"="users", "groups"={"list"}, "normalization_context"={"groups"={"list", "post"}}},
+ *     }
+ *     )
  */
-class User implements UserInterface, \Serializable
+class User
 {
     /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @Groups({"list", "get", "post"})
      * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(name="username", type="string", length=25, unique=true)
+     * @ORM\Column(type="string", length=100)
+     * @Groups({"list", "get", "post"})
+     * @Assert\NotBlank(message="The firstname of customer cannot be empty")
      */
-    private $username;
+    private $firstname;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=100)
+     * @Groups({"list", "get", "post"})
+     * @Assert\NotBlank(message="The name of customer cannot be empty")
      */
-    private $password;
+    private $lastname;
 
     /**
-     * @ORM\Column(name="email", type="string", length=254, unique=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="user")
      */
-    private $email;
+    private $client;
 
     /**
-     * @ORM\Column(name="is_active", type="boolean")
+     * @ORM\Column(type="string", length=200)
+     * @Groups({"get", "post"})
      */
-    private $isActive;
+    private $adress;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Client", mappedBy="user")
+     * @ORM\Column(type="string", length=100)
+     * @Groups({"get", "post"})
      */
-    private $clients;
+    private $city;
+
+    /**
+     * @ORM\Column(type="string", length=10)
+     * @Groups({"get", "post"})
+     */
+    private $postalCode;
 
     public function __construct()
     {
-        $this->isActive = true;
         $this->clients = new ArrayCollection();
-        // may not be needed, see section on salt below
-        // $this->salt = md5(uniqid('', true));
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUsername()
+    public function getFirstname(): ?string
     {
-        return $this->username;
+        return $this->firstname;
     }
 
-    public function setUsername(?string $username) : self
+    public function setFirstname(string $firstname): self
     {
-        $this->username = $username;
+        $this->firstname = $firstname;
 
         return $this;
     }
 
-    public function getEmail()
+    public function getLastname(): ?string
     {
-        return $this->email;
+        return $this->lastname;
     }
 
-    public function setEmail(?string $email) : self
+    public function setLastname(string $lastname): self
     {
-        $this->email = $email;
+        $this->lastname = $lastname;
 
         return $this;
     }
 
-    public function getSalt()
+    public function getClient(): ?Client
     {
-        // you *may* need a real salt depending on your encoder
-        // see section on salt below
-        return null;
+        return $this->client;
     }
 
-    public function getPassword()
+    public function setClient(?Client $client): self
     {
-        return $this->password;
-    }
-
-    public function setPassword(?string $password)
-    {
-        $this->password = $password;
+        $this->client = $client;
 
         return $this;
     }
 
-    public function getRoles()
+    public function getAdress(): ?string
     {
-        return array('ROLE_USER');
+        return $this->adress;
     }
 
-    public function eraseCredentials()
+    public function setAdress(string $adress): self
     {
-    }
-
-    /** @see \Serializable::serialize() */
-    public function serialize()
-    {
-        return serialize(array(
-            $this->id,
-            $this->username,
-            $this->password,
-            // see section on salt below
-            // $this->salt,
-        ));
-    }
-
-    /** @see \Serializable::unserialize() */
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->username,
-            $this->password,
-            // see section on salt below
-            // $this->salt
-            ) = unserialize($serialized, array('allowed_classes' => false));
-    }
-
-    /**
-     * @return Collection|Client[]
-     */
-    public function getClients(): Collection
-    {
-        return $this->clients;
-    }
-
-    public function addClient(Client $client): self
-    {
-        if (!$this->clients->contains($client)) {
-            $this->clients[] = $client;
-            $client->setUser($this);
-        }
+        $this->adress = $adress;
 
         return $this;
     }
 
-    public function removeClient(Client $client): self
+    public function getCity(): ?string
     {
-        if ($this->clients->contains($client)) {
-            $this->clients->removeElement($client);
-            // set the owning side to null (unless already changed)
-            if ($client->getUser() === $this) {
-                $client->setUser(null);
-            }
-        }
+        return $this->city;
+    }
+
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(string $postalCode): self
+    {
+        $this->postalCode = $postalCode;
 
         return $this;
     }

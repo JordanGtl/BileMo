@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource(
  *     itemOperations=
  *     {
- *          "getdetail"={"method"="GET", "path"="products/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
+ *          "getdetail"={"method"="GET", "path"="products/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}, "swagger_context"={"summary"="Retrieves product details by id."}},
  *          "put"={"method"="PUT", "path"="products/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
  *          "delete"={"method"="DELETE", "path"="products/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
  *     },
