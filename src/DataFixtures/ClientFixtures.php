@@ -35,6 +35,8 @@ class ClientFixtures extends BaseFixtures implements DependentFixtureInterface
 
             $client->setEmail($array[$count]['email']);
             $client->setIsActive(false);
+
+            dump($count);
         });
 
         $manager->flush();

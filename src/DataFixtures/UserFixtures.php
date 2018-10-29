@@ -18,7 +18,7 @@ class UserFixtures extends BaseFixtures
 
             $user->setFirstname($faker->firstName);
             $user->setLastname($faker->lastName);
-            //$user->setClient($this->getReference('App\Entity\Client_'.rand(1, 3)));
+            $user->setClient($this->getReference('App\Entity\Client_'.rand(0, 2)));
             $user->setAdress($faker->address);
             $user->setCity($faker->city);
             $user->setPostalCode($faker->postcode);
@@ -30,6 +30,7 @@ class UserFixtures extends BaseFixtures
     public function getDependencies()
     {
         return array(
+            ProductFixtures::class,
             ClientFixtures::class,
         );
     }
