@@ -9,7 +9,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Faker;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class ClientFixtures extends BaseFixtures implements DependentFixtureInterface
+class ClientFixtures extends BaseFixtures
 {
     private $encoder;
 
@@ -35,17 +35,8 @@ class ClientFixtures extends BaseFixtures implements DependentFixtureInterface
 
             $client->setEmail($array[$count]['email']);
             $client->setIsActive(false);
-
-            dump($count);
         });
 
         $manager->flush();
-    }
-
-    public function getDependencies()
-    {
-        return array(
-            ProductFixtures::class,
-        );
     }
 }
