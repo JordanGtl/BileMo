@@ -14,8 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource(
  *     itemOperations=
  *     {
- *          "getdetail"={"method"="GET", "path"="users/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
- *          "put"={"method"="PUT", "path"="users/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
+ *          "getdetail"={"method"="GET", "path"="users/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},git status
  *          "delete"={"method"="DELETE", "path"="users/{id}", "groups"={"list"}, "normalization_context"={"groups"={"get"}}},
  *     },
  *     collectionOperations=
@@ -56,18 +55,21 @@ class User
 
     /**
      * @ORM\Column(type="string", length=200)
+     * @Assert\NotBlank(message="Adress of customer cannot be empty")
      * @Groups({"get", "post"})
      */
     private $adress;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="The city of customer cannot be empty")
      * @Groups({"get", "post"})
      */
     private $city;
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Assert\NotBlank(message="The postal code of customer cannot be empty")
      * @Groups({"get", "post"})
      */
     private $postalCode;

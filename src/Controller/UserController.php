@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -81,26 +82,16 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/api/users/{id}", name="usersdel", methods={"PUT"})
+     * @Route("/api/users", name="usersadd", methods={"POST"})
      */
-    public function useredit($id, UserRepository $userRepository, TokenStorageInterface $tokenStorage, EntityManagerInterface $em, Request $request)
+    public function useredit(UserRepository $userRepository, TokenStorageInterface $tokenStorage, EntityManagerInterface $em, Request $request)
     {
-        $user = $userRepository->findOneBy(['id' => $id]);
+        $user = new User();
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $normalizer = new ObjectNormalizer($classMetadataFactory);
-
-        if($user == null || $user->getClient() != $tokenStorage->getToken()->getUser())
-        {
-            $data['@context'] = "/contexts/Error";
-            $data['@type'] = "Error";
-            $data['hydra:title'] = "An error occurred";
-            $data['hydra:description'] = "The user $id does not exist";
-            return $this->json($data, 404);
-        }
-
         $put = json_decode($request->getContent());
 
-        if($put->firstname == "")
+        if(!isset($put->firstname) || $put->firstname == "")
         {
             $data['@context'] = "/contexts/Error";
             $data['@type'] = "Error";
@@ -108,7 +99,7 @@ class UserController extends AbstractController
             $data['hydra:description'] = "Firstname cannot be empty";
             return $this->json($data, 400);
         }
-        else if($put->lastname == "")
+        else if(!isset($put->lastname) || $put->lastname == "")
         {
             $data['@context'] = "/contexts/Error";
             $data['@type'] = "Error";
@@ -116,7 +107,7 @@ class UserController extends AbstractController
             $data['hydra:description'] = "Lastname cannot be empty";
             return $this->json($data, 400);
         }
-        else if($put->adress == "")
+        else if(!isset($put->adress) || $put->adress == "")
         {
             $data['@context'] = "/contexts/Error";
             $data['@type'] = "Error";
@@ -124,7 +115,7 @@ class UserController extends AbstractController
             $data['hydra:description'] = "Adress cannot be empty";
             return $this->json($data, 400);
         }
-        else if($put->city == "")
+        else if(!isset($put->city) || $put->city == "")
         {
             $data['@context'] = "/contexts/Error";
             $data['@type'] = "Error";
@@ -132,7 +123,7 @@ class UserController extends AbstractController
             $data['hydra:description'] = "City name cannot be empty";
             return $this->json($data, 400);
         }
-        else if($put->postalCode == "")
+        else if(!isset($put->postalCode) || $put->postalCode == "")
         {
             $data['@context'] = "/contexts/Error";
             $data['@type'] = "Error";
@@ -146,10 +137,26 @@ class UserController extends AbstractController
         $user->setAdress($put->adress);
         $user->setCity($put->city);
         $user->setPostalCode($put->postalCode);
+        $user->setClient($tokenStorage->getToken()->getUser());
+        $em->persist($user);
         $em->flush();
 
+        $retour = array();
+
+        $retour['@context'] = "/api/contexts/User";
+        $retour['@id'] = "/api/users/".$user->getId();
+        $retour['@type'] = "User";
+        $retour['id'] = $user->getId();
+        $retour['id'] = $user->getId();
+        $retour['id'] = $user->getId();
+        $retour['firstname'] = $user->getFirstname();
+        $retour['lastname'] = $user->getLastname();
+        $retour['adress'] = $user->getAdress();
+        $retour['city'] = $user->getCity();
+        $retour['postalCode'] = $user->getPostalCode();
+
         $serializer = new Serializer(array($normalizer));
-        $data = $serializer->normalize($user, 'json', array('groups' => array('get')));
+        $data = $serializer->normalize($retour, 'json', array('groups' => array('get')));
 
         return $this->json($data);
     }
